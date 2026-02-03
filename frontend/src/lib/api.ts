@@ -27,7 +27,7 @@ async function refreshAccessToken(): Promise<string | null> {
   if (!refreshToken) return null;
 
   try {
-    const response = await fetch(`${API_URL}/auth/refresh`, {
+    const response = await fetch(`${API_URL}/api/v1/auth/refresh`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refreshToken }),
@@ -97,7 +97,7 @@ export const authApi = {
       user: { id: string; email: string; name: string };
       accessToken: string;
       refreshToken: string;
-    }>('/auth/register', {
+    }>('/api/v1/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, password, name }),
     });
@@ -111,7 +111,7 @@ export const authApi = {
       user: { id: string; email: string; name: string };
       accessToken: string;
       refreshToken: string;
-    }>('/auth/login', {
+    }>('/api/v1/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
@@ -123,7 +123,7 @@ export const authApi = {
     const refreshToken = getRefreshToken();
     if (refreshToken) {
       try {
-        await apiRequest('/auth/logout', {
+        await apiRequest('/api/v1/auth/logout', {
           method: 'POST',
           body: JSON.stringify({ refreshToken }),
         });
@@ -133,6 +133,33 @@ export const authApi = {
     }
     clearTokens();
   },
+};
+
+// Profile API functions
+export const profileApi = {
+  get: () =>
+    apiRequest<{
+      id: string;
+      email: string;
+      name: string;
+      createdAt: string;
+      updatedAt: string;
+    }>('/api/v1/me'),
+
+  update: (data: { name?: string; email?: string }) =>
+    apiRequest<{
+      message: string;
+      user: {
+        id: string;
+        email: string;
+        name: string;
+        createdAt: string;
+        updatedAt: string;
+      };
+    }>('/api/v1/me', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
 };
 
 // Task API functions
@@ -155,7 +182,7 @@ export const taskApi = {
         updatedAt: string;
       }>;
       pagination: { page: number; limit: number; total: number; totalPages: number };
-    }>(`/tasks${query ? `?${query}` : ''}`);
+    }>(`/api/v1/tasks${query ? `?${query}` : ''}`);
   },
 
   get: (id: string) =>
@@ -166,7 +193,7 @@ export const taskApi = {
       status: 'TODO' | 'IN_PROGRESS' | 'DONE';
       createdAt: string;
       updatedAt: string;
-    }>(`/tasks/${id}`),
+    }>(`/api/v1/tasks/${id}`),
 
   create: (data: { title: string; description?: string; status?: string }) =>
     apiRequest<{
@@ -176,7 +203,7 @@ export const taskApi = {
       status: 'TODO' | 'IN_PROGRESS' | 'DONE';
       createdAt: string;
       updatedAt: string;
-    }>('/tasks', {
+    }>('/api/v1/tasks', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
@@ -189,13 +216,13 @@ export const taskApi = {
       status: 'TODO' | 'IN_PROGRESS' | 'DONE';
       createdAt: string;
       updatedAt: string;
-    }>(`/tasks/${id}`, {
+    }>(`/api/v1/tasks/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     }),
 
   delete: (id: string) =>
-    apiRequest<{ message: string }>(`/tasks/${id}`, {
+    apiRequest<{ message: string }>(`/api/v1/tasks/${id}`, {
       method: 'DELETE',
     }),
 
@@ -207,9 +234,10 @@ export const taskApi = {
       status: 'TODO' | 'IN_PROGRESS' | 'DONE';
       createdAt: string;
       updatedAt: string;
-    }>(`/tasks/${id}/toggle`, {
+    }>(`/api/v1/tasks/${id}/toggle`, {
       method: 'PATCH',
     }),
 };
 
 export { getAccessToken, clearTokens };
+

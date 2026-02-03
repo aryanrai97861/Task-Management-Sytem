@@ -4,9 +4,10 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { useToast } from '@/lib/toast';
-import { taskApi } from '@/lib/api';
+import { taskApi, profileApi } from '@/lib/api';
 import TaskCard from '@/components/TaskCard';
 import TaskForm from '@/components/TaskForm';
+import ProfileModal from '@/components/ProfileModal';
 
 interface Task {
     id: string;
@@ -17,10 +18,20 @@ interface Task {
     updatedAt: string;
 }
 
+interface Profile {
+    id: string;
+    name: string;
+    email: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export default function DashboardPage() {
     const [tasks, setTasks] = useState<Task[]>([]);
+    const [profile, setProfile] = useState<Profile | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [editingTask, setEditingTask] = useState<Task | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -34,6 +45,15 @@ export default function DashboardPage() {
     const { user, logout, isLoading: authLoading } = useAuth();
     const { showToast } = useToast();
     const router = useRouter();
+
+    const fetchProfile = useCallback(async () => {
+        try {
+            const data = await profileApi.get();
+            setProfile(data);
+        } catch (error) {
+            showToast(error instanceof Error ? error.message : 'Failed to fetch profile', 'error');
+        }
+    }, [showToast]);
 
     const fetchTasks = useCallback(async () => {
         try {
@@ -62,9 +82,10 @@ export default function DashboardPage() {
 
     useEffect(() => {
         if (user) {
+            fetchProfile();
             fetchTasks();
         }
-    }, [user, fetchTasks]);
+    }, [user, fetchProfile, fetchTasks]);
 
     const handleCreateTask = async (data: { title: string; description: string; status: string }) => {
         setIsSubmitting(true);
@@ -91,6 +112,20 @@ export default function DashboardPage() {
             fetchTasks();
         } catch (error) {
             showToast(error instanceof Error ? error.message : 'Failed to update task', 'error');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleUpdateProfile = async (data: { name: string }) => {
+        setIsSubmitting(true);
+        try {
+            const result = await profileApi.update(data);
+            setProfile(result.user);
+            showToast('Profile updated successfully', 'success');
+            setIsProfileOpen(false);
+        } catch (error) {
+            showToast(error instanceof Error ? error.message : 'Failed to update profile', 'error');
         } finally {
             setIsSubmitting(false);
         }
@@ -141,14 +176,27 @@ export default function DashboardPage() {
                             <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                                 Task Manager
                             </h1>
-                            <p className="text-sm text-gray-500 mt-1">Welcome, {user.email}</p>
+                            <p className="text-sm text-gray-500 mt-1">
+                                Welcome, {profile?.name || user.email}
+                            </p>
                         </div>
-                        <button
-                            onClick={handleLogout}
-                            className="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-                        >
-                            Logout
-                        </button>
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => setIsProfileOpen(true)}
+                                className="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-2"
+                            >
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                Profile
+                            </button>
+                            <button
+                                onClick={handleLogout}
+                                className="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                            >
+                                Logout
+                            </button>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -281,6 +329,16 @@ export default function DashboardPage() {
                 initialData={editingTask}
                 isLoading={isSubmitting}
             />
+
+            {/* Profile Modal */}
+            <ProfileModal
+                isOpen={isProfileOpen}
+                onClose={() => setIsProfileOpen(false)}
+                onSubmit={handleUpdateProfile}
+                profile={profile}
+                isLoading={isSubmitting}
+            />
         </div>
     );
 }
+

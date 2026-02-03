@@ -3,7 +3,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.routes';
 import taskRoutes from './routes/task.routes';
+import profileRoutes from './routes/profile.routes';
 import { errorMiddleware } from './middleware/error.middleware';
+import { requestLogger, logger } from './utils/logger';
 
 dotenv.config();
 
@@ -16,10 +18,12 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+app.use(requestLogger);
 
-// Routes
-app.use('/auth', authRoutes);
-app.use('/tasks', taskRoutes);
+// API v1 Routes
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/tasks', taskRoutes);
+app.use('/api/v1', profileRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
@@ -31,7 +35,8 @@ app.use(errorMiddleware);
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  logger.info(`Server running on http://localhost:${PORT}`);
 });
 
 export default app;
+
