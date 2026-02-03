@@ -8,33 +8,7 @@ A full-stack Task Management System built with **Node.js/TypeScript** backend an
 ![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-
----
-
-## ✨ Features
-
-### Authentication & Security
-- 🔐 **User Registration** - Create new accounts with email and password
-- 🔑 **Secure Login** - JWT-based authentication system
-- 🔄 **Token Refresh** - Automatic access token renewal using refresh tokens
-- 🚪 **Logout** - Secure session termination
-- 🛡️ **Password Hashing** - bcrypt encryption for stored passwords
-
-### Task Management
-- ➕ **Create Tasks** - Add new tasks with title, description, and status
-- 📋 **View Tasks** - List all tasks with pagination support
-- ✏️ **Edit Tasks** - Update task details and status
-- 🗑️ **Delete Tasks** - Remove tasks with confirmation dialog
-- 🔄 **Toggle Status** - Quick cycle through TODO → IN_PROGRESS → DONE
-- 🔍 **Search** - Find tasks by title
-- 🏷️ **Filter** - Filter tasks by status (TODO, IN_PROGRESS, DONE)
-- 📄 **Pagination** - Load tasks in batches for performance
-
-### User Interface
-- 📱 **Responsive Design** - Works on desktop, tablet, and mobile
-- 🎨 **Modern UI** - Glassmorphism design with gradient backgrounds
-- 🔔 **Toast Notifications** - Feedback for all operations
-- ⚡ **Fast Loading** - Optimized performance with Next.js
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
 ---
 
@@ -43,149 +17,113 @@ A full-stack Task Management System built with **Node.js/TypeScript** backend an
 ### Backend
 | Technology | Purpose |
 |------------|---------|
-| Node.js | Runtime environment |
-| Express.js | Web framework |
-| TypeScript | Type safety |
-| Prisma | ORM for database |
+| Node.js + Express | API Server |
+| TypeScript | Type Safety |
+| Prisma ORM | Database Access |
 | PostgreSQL | Database |
-| JWT | Authentication tokens |
-| bcrypt | Password hashing |
-| Zod | Request validation |
+| JWT | Authentication (Access + Refresh Tokens) |
+| bcrypt | Password Hashing |
+| Zod | Request Validation |
+| express-rate-limit | Rate Limiting |
 
 ### Frontend
 | Technology | Purpose |
 |------------|---------|
-| Next.js 14 | React framework (App Router) |
-| TypeScript | Type safety |
-| Tailwind CSS | Styling |
-| React Context | State management |
+| Next.js 16 (App Router) | React Framework |
+| TypeScript | Type Safety |
+| Tailwind CSS v4 | Styling |
+| React Context | State Management |
+
+### DevOps
+| Technology | Purpose |
+|------------|---------|
+| Docker | Containerization |
+| Docker Compose | Multi-container orchestration |
 
 ---
 
-## 📁 Project Structure
+## 🚀 Quick Start
 
-```
-task-management-system/
-├── backend/                          # Backend API
-│   ├── prisma/
-│   │   └── schema.prisma             # Database schema
-│   ├── src/
-│   │   ├── controllers/
-│   │   │   ├── auth.controller.ts    # Auth handlers
-│   │   │   └── task.controller.ts    # Task handlers
-│   │   ├── middleware/
-│   │   │   ├── auth.middleware.ts    # JWT verification
-│   │   │   └── error.middleware.ts   # Error handling
-│   │   ├── routes/
-│   │   │   ├── auth.routes.ts        # Auth endpoints
-│   │   │   └── task.routes.ts        # Task endpoints
-│   │   ├── utils/
-│   │   │   ├── jwt.utils.ts          # Token helpers
-│   │   │   └── prisma.ts             # DB client
-│   │   └── app.ts                    # Express app
-│   ├── .env                          # Environment variables
-│   ├── package.json
-│   └── tsconfig.json
-│
-├── frontend/                         # Frontend App
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── login/page.tsx        # Login page
-│   │   │   ├── register/page.tsx     # Register page
-│   │   │   ├── dashboard/page.tsx    # Main dashboard
-│   │   │   ├── layout.tsx            # Root layout
-│   │   │   ├── page.tsx              # Home (redirect)
-│   │   │   └── globals.css           # Global styles
-│   │   ├── components/
-│   │   │   ├── TaskCard.tsx          # Task display
-│   │   │   └── TaskForm.tsx          # Create/Edit form
-│   │   ├── lib/
-│   │   │   ├── api.ts                # API client
-│   │   │   ├── auth.tsx              # Auth context
-│   │   │   └── toast.tsx             # Toast notifications
-│   │   └── types/
-│   │       └── index.ts              # TypeScript types
-│   ├── .env.local                    # Environment variables
-│   └── package.json
-│
-└── README.md
-```
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Node.js** (v18 or higher)
-- **npm** or **yarn**
-- **PostgreSQL** database (local or cloud)
-
-### 1. Clone the Repository
+### Option 1: Docker (Recommended)
 
 ```bash
-git clone <repository-url>
-cd task-management-system
+# Clone the repository
+git clone https://github.com/aryanrai97861/Task-Management-Sytem.git
+cd Task-Management-Sytem
+
+# Start all services (PostgreSQL + Backend + Frontend)
+docker-compose up --build
 ```
 
-### 2. Backend Setup
+✅ Access the app at `http://localhost:3000`
+
+### Option 2: Manual Setup
+
+#### Prerequisites
+- Node.js v18+
+- PostgreSQL database
+
+#### 1. Backend Setup
 
 ```bash
-# Navigate to backend
 cd backend
-
-# Install dependencies
 npm install
 
-# Configure environment variables
-# Edit .env file with your PostgreSQL credentials:
+# Create .env file (copy from .env.example)
+cp .env.example .env
 ```
 
-**Edit `backend/.env`:**
+**Configure `backend/.env`:**
 ```env
-DATABASE_URL="postgresql://username:password@localhost:5432/taskmanagement?schema=public"
-JWT_ACCESS_SECRET="your-secure-access-secret-key"
-JWT_REFRESH_SECRET="your-secure-refresh-secret-key"
+DATABASE_URL="postgresql://username:password@localhost:5432/taskdb?schema=public"
+JWT_ACCESS_SECRET="your-super-secret-access-key"
+JWT_REFRESH_SECRET="your-super-secret-refresh-key"
 ACCESS_TOKEN_EXPIRY="15m"
 REFRESH_TOKEN_EXPIRY="7d"
 PORT=3001
+FRONTEND_URL="http://localhost:3000"
 ```
 
 ```bash
-# Generate Prisma client
+# Setup database
 npx prisma generate
-
-# Push database schema (creates tables)
 npx prisma db push
 
-# Start development server
+# Start server
 npm run dev
 ```
 
-✅ Backend will be running at `http://localhost:3001`
-
-### 3. Frontend Setup
+#### 2. Frontend Setup
 
 ```bash
-# Open a new terminal
-# Navigate to frontend
 cd frontend
-
-# Install dependencies (if not already done)
 npm install
 
-# Start development server
+# Create .env.local
+echo "NEXT_PUBLIC_API_URL=http://localhost:3001" > .env.local
+
+# Start server
 npm run dev
 ```
 
-✅ Frontend will be running at `http://localhost:3000`
+✅ Backend: `http://localhost:3001` | Frontend: `http://localhost:3000`
 
-### 4. Access the Application
+---
 
-1. Open your browser and go to `http://localhost:3000`
-2. Register a new account
-3. Login with your credentials
-4. Start managing your tasks!
+## 🔑 Demo Credentials
+
+Register a new account or use the seeding approach:
+
+```bash
+# Using the API directly (after backend is running)
+curl -X POST http://localhost:3001/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email": "demo@example.com", "password": "demo123", "name": "Demo User"}'
+```
+
+**Demo Account:**
+- Email: `demo@example.com`
+- Password: `demo123`
 
 ---
 
@@ -193,28 +131,35 @@ npm run dev
 
 ### Base URL
 ```
-http://localhost:3001
+http://localhost:3001/api/v1
 ```
 
 ### Authentication Endpoints
 
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| POST | `/auth/register` | Register new user | No |
-| POST | `/auth/login` | Login user | No |
-| POST | `/auth/refresh` | Refresh access token | No |
-| POST | `/auth/logout` | Logout user | No |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/auth/register` | Register new user |
+| POST | `/api/v1/auth/login` | Login user |
+| POST | `/api/v1/auth/refresh` | Refresh access token |
+| POST | `/api/v1/auth/logout` | Logout user |
 
-### Task Endpoints
+### Profile Endpoints
 
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| GET | `/tasks` | Get all tasks | Yes |
-| POST | `/tasks` | Create new task | Yes |
-| GET | `/tasks/:id` | Get single task | Yes |
-| PATCH | `/tasks/:id` | Update task | Yes |
-| DELETE | `/tasks/:id` | Delete task | Yes |
-| PATCH | `/tasks/:id/toggle` | Toggle task status | Yes |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/me` | Get current user profile |
+| PUT | `/api/v1/me` | Update profile |
+
+### Task Endpoints (Requires Authentication)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/tasks` | Get all tasks (paginated) |
+| POST | `/api/v1/tasks` | Create new task |
+| GET | `/api/v1/tasks/:id` | Get single task |
+| PATCH | `/api/v1/tasks/:id` | Update task |
+| DELETE | `/api/v1/tasks/:id` | Delete task |
+| PATCH | `/api/v1/tasks/:id/toggle` | Toggle task status |
 
 ### Query Parameters for GET /tasks
 
@@ -222,117 +167,122 @@ http://localhost:3001
 |-----------|------|-------------|
 | `page` | number | Page number (default: 1) |
 | `limit` | number | Items per page (default: 10) |
-| `status` | string | Filter by status: TODO, IN_PROGRESS, DONE |
+| `status` | string | Filter: TODO, IN_PROGRESS, DONE |
 | `q` | string | Search by title |
 
-### Request/Response Examples
+### Example Requests
 
-**Register User:**
+**Register:**
 ```bash
-POST /auth/register
-Content-Type: application/json
+curl -X POST http://localhost:3001/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "password123", "name": "John Doe"}'
+```
 
-{
-  "email": "user@example.com",
-  "password": "password123",
-  "name": "John Doe"
-}
+**Login:**
+```bash
+curl -X POST http://localhost:3001/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "password123"}'
 ```
 
 **Create Task:**
 ```bash
-POST /tasks
-Authorization: Bearer <access_token>
-Content-Type: application/json
+curl -X POST http://localhost:3001/api/v1/tasks \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "My Task", "description": "Task details", "status": "TODO"}'
+```
 
+---
+
+## 📦 Postman Collection
+
+Import this collection in Postman:
+
+```json
 {
-  "title": "Complete project",
-  "description": "Finish the task management system",
-  "status": "TODO"
+  "info": {
+    "name": "Task Management API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3001/api/v1" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        { "name": "Register", "request": { "method": "POST", "url": "{{baseUrl}}/auth/register", "body": { "mode": "raw", "raw": "{\"email\": \"test@test.com\", \"password\": \"test123\", \"name\": \"Test\"}", "options": { "raw": { "language": "json" } } } } },
+        { "name": "Login", "request": { "method": "POST", "url": "{{baseUrl}}/auth/login", "body": { "mode": "raw", "raw": "{\"email\": \"test@test.com\", \"password\": \"test123\"}", "options": { "raw": { "language": "json" } } } } }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        { "name": "Get All Tasks", "request": { "method": "GET", "url": "{{baseUrl}}/tasks", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }] } },
+        { "name": "Create Task", "request": { "method": "POST", "url": "{{baseUrl}}/tasks", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "raw", "raw": "{\"title\": \"New Task\", \"status\": \"TODO\"}", "options": { "raw": { "language": "json" } } } } }
+      ]
+    }
+  ]
 }
-```
-
----
-
-## 🗄️ Database Schema
-
-### User Model
-| Field | Type | Description |
-|-------|------|-------------|
-| id | UUID | Primary key |
-| email | String | Unique email |
-| password | String | Hashed password |
-| name | String | User's name |
-| createdAt | DateTime | Account creation date |
-| updatedAt | DateTime | Last update date |
-
-### Task Model
-| Field | Type | Description |
-|-------|------|-------------|
-| id | UUID | Primary key |
-| title | String | Task title |
-| description | String? | Optional description |
-| status | Enum | TODO, IN_PROGRESS, DONE |
-| userId | UUID | Foreign key to User |
-| createdAt | DateTime | Creation date |
-| updatedAt | DateTime | Last update date |
-
-### RefreshToken Model
-| Field | Type | Description |
-|-------|------|-------------|
-| id | UUID | Primary key |
-| token | String | Unique token |
-| userId | UUID | Foreign key to User |
-| expiresAt | DateTime | Token expiry |
-| createdAt | DateTime | Creation date |
-
----
-
-## 🔧 Available Scripts
-
-### Backend
-
-```bash
-npm run dev      # Start development server with hot reload
-npm run build    # Build for production
-npm start        # Start production server
-npx prisma studio  # Open Prisma database GUI
-```
-
-### Frontend
-
-```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm start        # Start production server
-npm run lint     # Run ESLint
 ```
 
 ---
 
 ## 🔒 Security Features
 
-- **JWT Authentication**: Short-lived access tokens (15 min) with refresh token rotation
-- **Password Hashing**: bcrypt with salt rounds for secure storage
-- **Protected Routes**: Middleware verification on all task endpoints
-- **Input Validation**: Zod schemas validate all incoming requests
-- **Error Handling**: Proper HTTP status codes and error messages
+- **Password Hashing**: bcrypt with salt rounds
+- **JWT Authentication**: Access tokens (15min) + Refresh tokens (7 days)
+- **Rate Limiting**: 100 req/15min general, 10 req/15min for auth
+- **Protected Routes**: Middleware verification on all endpoints
+- **Input Validation**: Zod schemas for all requests
+- **CORS**: Configured for frontend origin
 
 ---
 
-## 🤝 Contributing
+## 📈 Scaling for Production
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+**How would I scale this application for production?**
+
+1. **Deployment**: Deploy backend on AWS ECS/Fargate or Railway, frontend on Vercel. Use managed PostgreSQL (AWS RDS, Supabase, or Neon).
+
+2. **Environment Management**: Use environment-specific configs with secrets managed via AWS Secrets Manager or Doppler. Never commit `.env` files.
+
+3. **Database Optimization**: Add indexes on frequently queried columns (already done for `userId`, `status`). Use connection pooling (PgBouncer) and read replicas for scaling reads.
+
+4. **Caching**: Implement Redis for session storage, rate limiting state, and caching frequently accessed data (user profiles, task counts).
+
+5. **Security Hardening**: Add Helmet.js for HTTP headers, implement HTTPS only, use HttpOnly cookies for tokens, add CSRF protection, and enable request logging with correlation IDs.
+
+6. **Monitoring**: Add APM (DataDog/New Relic), structured logging (Winston/Pino), health checks, and alerting for error rates and latency.
 
 ---
 
-## 📝 License
+## 📁 Project Structure
 
-This project is licensed under the MIT License.
+```
+task-management-system/
+├── backend/
+│   ├── src/
+│   │   ├── controllers/     # Route handlers
+│   │   ├── middleware/      # Auth, error, rate limiting
+│   │   ├── routes/          # API routes
+│   │   ├── utils/           # JWT, Prisma, Logger
+│   │   └── app.ts           # Express app
+│   ├── prisma/schema.prisma # Database schema
+│   ├── Dockerfile
+│   └── .env.example
+├── frontend/
+│   ├── src/
+│   │   ├── app/             # Next.js pages
+│   │   ├── components/      # React components
+│   │   └── lib/             # API client, Auth, Toast
+│   └── Dockerfile
+├── docker-compose.yml
+└── README.md
+```
 
 ---
 
@@ -342,8 +292,6 @@ This project is licensed under the MIT License.
 
 ---
 
-## 🙏 Acknowledgments
+## 📝 License
 
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Prisma Documentation](https://www.prisma.io/docs)
-- [Tailwind CSS](https://tailwindcss.com)
+MIT License
