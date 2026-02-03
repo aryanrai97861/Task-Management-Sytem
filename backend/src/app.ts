@@ -6,6 +6,7 @@ import taskRoutes from './routes/task.routes';
 import profileRoutes from './routes/profile.routes';
 import { errorMiddleware } from './middleware/error.middleware';
 import { requestLogger, logger } from './utils/logger';
+import { generalLimiter, authLimiter } from './middleware/rateLimit.middleware';
 
 dotenv.config();
 
@@ -19,9 +20,10 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(requestLogger);
+app.use(generalLimiter);
 
 // API v1 Routes
-app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/auth', authLimiter, authRoutes);
 app.use('/api/v1/tasks', taskRoutes);
 app.use('/api/v1', profileRoutes);
 
@@ -39,4 +41,5 @@ app.listen(PORT, () => {
 });
 
 export default app;
+
 
